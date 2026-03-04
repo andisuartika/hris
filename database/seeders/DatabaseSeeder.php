@@ -14,42 +14,75 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        // 1. Buat Perusahaan
+        // 1. Panggil Seeder Role & Permission
+        $this->call([
+            RolePermissionSeeder::class,
+        ]);
+
+        // 2. Buat Data Perusahaan
         $company = Company::create([
-            'name' => 'PT Teknologi Kopi Nusantara',
+            'name' => 'Pt Andi Maju Jaya',
             'timezone' => 'Asia/Jakarta',
         ]);
 
-        // 2. Buat Lokasi Kantor
+        // 3. Buat Lokasi Kantor
         $office = OfficeLocation::create([
             'company_id' => $company->id,
-            'name' => 'Headquarter',
-            'latitude' => -6.200000, // Ganti dengan kordinat asli
-            'longitude' => 106.816666,
+            'name' => 'Headquarter Office',
+            'latitude' => -8.603619788089171,
+            'longitude' => 115.17589729052621,
             'radius_meters' => 100,
         ]);
 
-        // 3. Buat Setting Absensi
+        // 4. Buat Setting Absensi
         AttendanceSetting::create([
             'company_id' => $company->id,
             'face_match_threshold' => 85,
             'is_gps_enabled' => true,
         ]);
 
-        // 4. Buat User Login
+        // ==========================================
+        // 5. SEEDER UNTUK EMPLOYEE BIASA
+        // ==========================================
         $user = User::create([
-            'name' => 'Budi Kopi',
-            'email' => 'budi@example.com',
+            'name' => 'Andi Suartika',
+            'email' => 'andi@mail.com',
             'password' => Hash::make('password123'),
         ]);
-
-        // 5. Hubungkan User sebagai Employee
+        $user->assignRole('employee'); // Berikan role employee
         Employee::create([
             'user_id' => $user->id,
             'company_id' => $company->id,
             'office_location_id' => $office->id,
             'employee_code' => 'EMP-001',
-            'full_name' => 'Budi Kopi',
+            'full_name' => 'Andi Suartika',
         ]);
+
+        // ==========================================
+        // 6. SEEDER UNTUK HR (TAMBAHAN BARU)
+        // ==========================================
+        $hrUser = User::create([
+            'name' => 'HR Manager',
+            'email' => 'hr@mail.com',
+            'password' => Hash::make('password123'),
+        ]);
+        $hrUser->assignRole('hr'); // Berikan role hr
+        Employee::create([
+            'user_id' => $hrUser->id,
+            'company_id' => $company->id,
+            'office_location_id' => $office->id,
+            'employee_code' => 'HR-001',
+            'full_name' => 'HR Manager',
+        ]);
+
+        // ==========================================
+        // 7. SEEDER UNTUK SUPER ADMIN
+        // ==========================================
+        $admin = User::create([
+            'name' => 'Super Admin',
+            'email' => 'admin@mail.com',
+            'password' => Hash::make('password123'),
+        ]);
+        $admin->assignRole('admin'); // Berikan role admin
     }
 }
