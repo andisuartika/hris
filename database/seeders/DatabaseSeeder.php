@@ -60,7 +60,7 @@ class DatabaseSeeder extends Seeder
 
         // ==========================================
         // 6. SEEDER UNTUK HR (TAMBAHAN BARU)
-        // ==========================================
+        // ==========================================196802192008011005
         $hrUser = User::create([
             'name' => 'HR Manager',
             'email' => 'hr@mail.com',
