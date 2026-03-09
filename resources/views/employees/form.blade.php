@@ -1,5 +1,11 @@
-@extends('layouts.vertical', ['title' => isset($employee) ? 'Edit Pegawai' : 'Tambah Pegawai', 'subTitle' => 'Kepegawaian'])
-
+@extends('layouts.vertical', [
+'title' => isset($employee) ? 'Edit Pegawai' : 'Tambah Pegawai',
+'titleRoute' => route('employees.index'),
+'subTitle' => 'Data Pegawai',
+'subTitleRoute' => route('employees.index'),
+'parentTitle' => 'Kepegawaian',
+'parentRoute' => '#',
+])
 @section('css')
 @vite(['node_modules/choices.js/public/assets/styles/choices.min.css'])
 @endsection
@@ -183,4 +189,4 @@
         </form>
     </div>
 </div>
-@endsection 
+@endsection

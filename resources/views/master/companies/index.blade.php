@@ -1,4 +1,4 @@
-@extends('layouts.vertical', ['title' => 'Daftar Instansi', 'subTitle' => 'Data Master'])
+@extends('layouts.vertical', ['title' => 'Daftar Perusahaan', 'subTitle' => 'Data Master'])
 
 @section('content')
 
@@ -18,13 +18,13 @@
                                 </form>
                             </div>
                             <div class="col-lg-4">
-                                <h5 class="text-dark fw-medium mb-0">{{ $companies->count() }} <span class="text-muted"> Instansi</span></h5>
+                                <h5 class="text-dark fw-medium mb-0">{{ $companies->count() }} <span class="text-muted"> Perusahaan</span></h5>
                             </div>
                         </div>
                     </div>
                     <div class="col-lg-6">
                         <div class="text-md-end mt-3 mt-md-0">
-                            <a href="{{ route('companies.create') }}" class="btn btn-success me-1"><i class="ri-add-line"></i> Tambah Instansi</a>
+                            <a href="{{ route('companies.create') }}" class="btn btn-success me-1"><i class="ri-add-line"></i> Tambah Perusahaan</a>
                         </div>
                     </div>
                 </div>
@@ -38,7 +38,7 @@
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center border-bottom">
                 <div>
-                    <h4 class="card-title">Semua Daftar Instansi</h4>
+                    <h4 class="card-title">Semua Daftar Perusahaan</h4>
                 </div>
 
             </div>

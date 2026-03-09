@@ -1,4 +1,12 @@
-@extends('layouts.vertical', ['title' => isset($company) ? 'Edit Instansi' : 'Tambah Instansi', 'subTitle' => 'Data Master'])
+@extends('layouts.vertical', [
+'title' => isset($company) ? 'Edit Perusahaan' : 'Tambah Perusahaan',
+'titleRoute' => '#',
+'subTitle' => 'Data Perusahaan',
+'subTitleRoute' => route('companies.index'),
+'parentTitle' => 'Master Data',
+'parentRoute' => '#',
+])
+
 @section('css')
 @vite(['node_modules/choices.js/public/assets/styles/choices.min.css'])
 @endsection

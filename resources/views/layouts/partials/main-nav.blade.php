@@ -58,7 +58,7 @@
                         <li class="sub-nav-item"><a class="sub-nav-link" href="{{ route('companies.index') }}">Instansi / Perusahaan</a></li>
                         @endcan
                         @can('master:lokasi')
-                        <li class="sub-nav-item"><a class="sub-nav-link" href="#">Lokasi Kantor (GPS)</a></li>
+                        <li class="sub-nav-item"><a class="sub-nav-link" href="{{ route('office-locations.index') }}">Lokasi Kantor (GPS)</a></li>
                         @endcan
                         @can('master:departemen')
                         <li class="sub-nav-item"><a class="sub-nav-link" href="{{ route('departments.index') }}">Departemen / Divisi</a></li>

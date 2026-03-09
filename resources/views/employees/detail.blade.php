@@ -1,4 +1,12 @@
-@extends('layouts.vertical', ['title' => 'Detail Pegawai', 'subTitle' => 'Kepegawaian'])
+
+@extends('layouts.vertical', [
+'title' => 'Detail Pegawai',
+'titleRoute' => route('employees.index'),
+'subTitle' => 'Data Pegawai',
+'subTitleRoute' => route('employees.index'),
+'parentTitle' => 'Kepegawaian',
+'parentRoute' => '#',
+])
 
 @section('content')
 <div class="row">

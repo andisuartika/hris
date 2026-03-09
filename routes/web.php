@@ -5,6 +5,7 @@ use App\Http\Controllers\Web\AuthController;
 use App\Http\Controllers\Web\CompanyController;
 use App\Http\Controllers\Web\DepartementController;
 use App\Http\Controllers\Web\EmployeeController;
+use App\Http\Controllers\Web\OfficeLocationController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -38,5 +39,6 @@ Route::middleware('auth')->group(function () {
         Route::resource('companies', CompanyController::class);
         Route::resource('departments', DepartementController::class);
         Route::resource('positions', PositionController::class);
+        Route::resource('office-locations', OfficeLocationController::class);
     });
 });
