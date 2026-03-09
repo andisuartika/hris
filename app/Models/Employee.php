@@ -9,7 +9,30 @@ class Employee extends Model
 {
     use SoftDeletes;
 
-    protected $fillable = ['user_id', 'company_id', 'office_location_id', 'employee_code', 'full_name'];
+    protected $fillable = [
+        'user_id',
+        'company_id',
+        'office_location_id',
+        'employee_code',
+        'full_name',
+        'email',
+        'phone',
+        'address',
+        'status',
+        'department_id',
+        'position_id',
+        'join_date',
+        'contract_start',
+        'contract_end',
+        'office_locations'
+    ];
+
+    protected $casts = [
+        'join_date' => 'date',
+        'contract_start' => 'date',
+        'contract_end' => 'date',
+        'office_locations' => 'array',
+    ];
 
     public function user()
     {
@@ -30,5 +53,13 @@ class Employee extends Model
     public function attendances()
     {
         return $this->hasMany(Attendance::class);
+    }
+    public function department()
+    {
+        return $this->belongsTo(Department::class);
+    }
+    public function position()
+    {
+        return $this->belongsTo(Position::class);
     }
 }

@@ -8,31 +8,32 @@
 
 <body>
 
-<div class="wrapper">
+    <div class="wrapper">
 
-    @include("layouts.partials/topbar")
-    @include("layouts.partials/main-nav")
+        @include("layouts.partials/topbar")
+        @include("layouts.partials/main-nav")
 
-    <div class="page-content">
+        <div class="page-content">
 
-        <div class="container-fluid">
+            <div class="container-fluid">
 
-            @include("layouts.partials/page-title",['title' => $title,'subTitle' => $subTitle])
+                @include("layouts.partials/page-title",['title' => $title,'subTitle' => $subTitle])
 
-            @yield('content')
+                @yield('content')
 
+            </div>
+
+            @include("layouts.partials/footer")
+
+            @yield('modal')
         </div>
 
-        @include("layouts.partials/footer")
-
-        @yield('modal')
     </div>
 
-</div>
-
-@include("layouts.partials/right-sidebar")
-@include('layouts.partials/footer-scripts')
-
+    @include("layouts.partials/right-sidebar")
+    @include('layouts.partials/footer-scripts')
+    <x-swal-confirm />
+    <x-toast />
 </body>
 
 </html>

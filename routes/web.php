@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Web\AuthController;
+use App\Http\Controllers\Web\EmployeeController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -23,7 +24,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
     //DASHBOARD
-    Route::get('/admin/dashboard',function(){
+    Route::get('/admin/dashboard', function () {
         return view('dashboard');
     });
+
+    // Route CRUD Kepegawaian
+    Route::resource('employees', EmployeeController::class);
 });

@@ -8,10 +8,9 @@
 
 <body>
 
-@yield('content')
+    @yield('content')
 
-@include('layouts.partials/footer-scripts')
-
+    @include('layouts.partials/footer-scripts')
 </body>
 
 </html>

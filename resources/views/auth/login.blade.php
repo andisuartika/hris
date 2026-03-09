@@ -7,11 +7,11 @@
         <div class="card-body px-3 py-5">
             <div class="mx-auto mb-4 text-center auth-logo">
                 <a href="/" class="logo-dark">
-                    <img src="/images/logo-hris.png" height="50" alt="logo dark">
+                    <img src="/images/logo-dark.png" height="50" alt="logo dark">
                 </a>
 
                 <a href="/" class="logo-light">
-                    <img src="/images/logo-hris.png" height="50" alt="logo light">
+                    <img src="/images/logo-light.png" height="50" alt="logo light">
                 </a>
             </div>
 

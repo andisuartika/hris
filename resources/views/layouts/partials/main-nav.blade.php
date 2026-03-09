@@ -75,7 +75,7 @@
                 <div class="collapse" id="sidebarEmployees">
                     <ul class="nav sub-navbar-nav">
                         <li class="sub-nav-item">
-                            <a class="sub-nav-link" href="#">Data Pegawai</a>
+                            <a class="sub-nav-link" href="{{ route('employees.index') }}">Data Pegawai</a>
                         </li>
                         <li class="sub-nav-item">
                             <a class="sub-nav-link" href="#">Pendaftaran Wajah</a>
