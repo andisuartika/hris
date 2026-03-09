@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Web\PositionController;
 use App\Http\Controllers\Web\AuthController;
 use App\Http\Controllers\Web\CompanyController;
 use App\Http\Controllers\Web\DepartementController;
@@ -36,5 +37,6 @@ Route::middleware('auth')->group(function () {
     Route::group(['middleware' => ['role:admin']], function () {
         Route::resource('companies', CompanyController::class);
         Route::resource('departments', DepartementController::class);
+        Route::resource('positions', PositionController::class);
     });
 });

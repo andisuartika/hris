@@ -64,7 +64,7 @@
                         <li class="sub-nav-item"><a class="sub-nav-link" href="{{ route('departments.index') }}">Departemen / Divisi</a></li>
                         @endcan
                         @can('master:jabatan')
-                        <li class="sub-nav-item"><a class="sub-nav-link" href="#">Posisi & Jabatan</a></li>
+                        <li class="sub-nav-item"><a class="sub-nav-link" href="{{ route('positions.index') }}">Posisi & Jabatan</a></li>
                         @endcan
                     </ul>
                 </div>
