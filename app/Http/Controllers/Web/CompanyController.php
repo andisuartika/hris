@@ -4,9 +4,9 @@ namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Models\Company;
-use App\Services\Company\CompanyService;
 use App\DTO\Company\CompanyDTO;
-use App\Http\Requests\Company\StoreCompanyRequest;
+use App\Http\Requests\Master\StoreCompanyRequest;
+use App\Services\Master\CompanyService;
 
 class CompanyController extends Controller
 {
@@ -20,7 +20,7 @@ class CompanyController extends Controller
      */
     public function index()
     {
-        $companies = Company::latest()->get();
+        $companies = $this->companyService->getAll();
         return view('master.companies.index', compact('companies'));
     }
 

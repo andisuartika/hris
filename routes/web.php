@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Web\AuthController;
 use App\Http\Controllers\Web\CompanyController;
+use App\Http\Controllers\Web\DepartementController;
 use App\Http\Controllers\Web\EmployeeController;
 use Illuminate\Support\Facades\Route;
 
@@ -34,5 +35,6 @@ Route::middleware('auth')->group(function () {
 
     Route::group(['middleware' => ['role:admin']], function () {
         Route::resource('companies', CompanyController::class);
+        Route::resource('departments', DepartementController::class);
     });
 });

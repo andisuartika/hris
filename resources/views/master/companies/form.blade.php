@@ -2,6 +2,8 @@
 @section('css')
 @vite(['node_modules/choices.js/public/assets/styles/choices.min.css'])
 @endsection
+
+
 @section('content')
 <div class="row justify-content-center">
     <div class="col-lg-8">

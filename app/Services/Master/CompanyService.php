@@ -1,12 +1,17 @@
 <?php
 
-namespace App\Services\Company;
+namespace App\Services\Master;
 
 use App\Models\Company;
 use App\DTO\Company\CompanyDTO;
 
 class CompanyService
 {
+    public function getAll()
+    {
+        return Company::latest()->get();
+    }
+
     public function createCompany(CompanyDTO $dto): Company
     {
         return Company::create([

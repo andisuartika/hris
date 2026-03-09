@@ -61,7 +61,7 @@
                         <li class="sub-nav-item"><a class="sub-nav-link" href="#">Lokasi Kantor (GPS)</a></li>
                         @endcan
                         @can('master:departemen')
-                        <li class="sub-nav-item"><a class="sub-nav-link" href="#">Departemen / Divisi</a></li>
+                        <li class="sub-nav-item"><a class="sub-nav-link" href="{{ route('departments.index') }}">Departemen / Divisi</a></li>
                         @endcan
                         @can('master:jabatan')
                         <li class="sub-nav-item"><a class="sub-nav-link" href="#">Posisi & Jabatan</a></li>

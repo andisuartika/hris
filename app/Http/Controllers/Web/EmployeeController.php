@@ -50,8 +50,6 @@ class EmployeeController extends Controller
 
     public function create()
     {
-        // Ambil data lokasi kantor untuk dropdown di form
-        // Kita asumsikan mengambil lokasi berdasarkan company dari HR/Admin yang login
         $companyId = auth()->user()->employee->company_id ?? 1;
         $officeLocations = OfficeLocation::where('company_id', $companyId)->get();
         $departments = Department::where('company_id', $companyId)->get();
