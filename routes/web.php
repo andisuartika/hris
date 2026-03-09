@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Web\AuthController;
+use App\Http\Controllers\Web\CompanyController;
 use App\Http\Controllers\Web\EmployeeController;
 use Illuminate\Support\Facades\Route;
 
@@ -30,4 +31,8 @@ Route::middleware('auth')->group(function () {
 
     // Route CRUD Kepegawaian
     Route::resource('employees', EmployeeController::class);
+
+    Route::group(['middleware' => ['role:admin']], function () {
+        Route::resource('companies', CompanyController::class);
+    });
 });

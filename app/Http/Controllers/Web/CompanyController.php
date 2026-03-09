@@ -6,46 +6,76 @@ use App\Http\Controllers\Controller;
 use App\Models\Company;
 use App\Services\Company\CompanyService;
 use App\DTO\Company\CompanyDTO;
-use Illuminate\Http\Request;
+use App\Http\Requests\Company\StoreCompanyRequest;
 
 class CompanyController extends Controller
 {
+    // Inject Service melalui Constructor
     public function __construct(
         protected CompanyService $companyService
     ) {}
 
+    /**
+     * Menampilkan daftar perusahaan (jika ke depan ada banyak instansi)
+     */
+    public function index()
+    {
+        $companies = Company::latest()->get();
+        return view('master.companies.index', compact('companies'));
+    }
+
+    /**
+     * Form tambah perusahaan
+     */
     public function create()
     {
         $timezones = \DateTimeZone::listIdentifiers();
-        return view('companies.create', compact('timezones'));
+        return view('master.companies.form', compact('timezones'));
     }
 
-    public function store(Request $request)
+    /**
+     * Simpan data menggunakan DTO dan Service
+     */
+    public function store(StoreCompanyRequest $request)
     {
-        $validated = $request->validate([
-            'name'     => 'required|string|max:255',
-            'timezone' => 'required|string',
-        ]);
-
+        // 1. Ubah request menjadi DTO
         $dto = CompanyDTO::fromRequest($request);
+
+        // 2. Eksekusi logika bisnis di Service
         $this->companyService->createCompany($dto);
 
         return redirect()->route('companies.index')
-            ->with('success', 'Perusahaan berhasil dibuat!');
+            ->with('success', 'Data instansi berhasil ditambahkan!');
     }
 
-
-    public function update(Request $request, Company $company)
+    /**
+     * Form edit perusahaan
+     */
+    public function edit(Company $company)
     {
-        $request->validate([
-            'name'     => 'required|string|max:255',
-            'timezone' => 'required|string',
-        ]);
+        $timezones = \DateTimeZone::listIdentifiers();
+        return view('master.companies.form', compact('company', 'timezones'));
+    }
 
+    /**
+     * Update data
+     */
+    public function update(StoreCompanyRequest $request, Company $company)
+    {
         $dto = CompanyDTO::fromRequest($request);
         $this->companyService->updateCompany($company, $dto);
 
         return redirect()->route('companies.index')
-            ->with('success', 'Perusahaan berhasil diperbarui!');
+            ->with('success', 'Data instansi berhasil diperbarui!');
+    }
+
+    /**
+     * Hapus data
+     */
+    public function destroy(Company $company)
+    {
+        $company->delete();
+        return redirect()->route('companies.index')
+            ->with('success', 'Data instansi berhasil dihapus!');
     }
 }

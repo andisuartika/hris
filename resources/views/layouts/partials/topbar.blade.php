@@ -147,10 +147,28 @@
                     <div class="dropdown topbar-item">
                         <a type="button" class="topbar-button" id="page-header-user-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <span class="d-flex align-items-center">
-                                <img class="rounded-circle" width="32" src="/images/users/avatar-1.jpg" alt="avatar-3">
+                                {{-- Menggunakan UI Avatars agar foto profil dinamis sesuai nama user --}}
+                                <img class="rounded-circle" width="32" src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name) }}&background=random" alt="avatar">
                             </span>
                         </a>
+                        <div class="dropdown-menu dropdown-menu-end">
+                            {{-- Koreksi: Gunakan auth()->user() bukan $Auth->user() --}}
+                            <h6 class="dropdown-header">Welcome {{ auth()->user()->name }}!</h6>
 
+                            <div class="dropdown-divider my-1"></div>
+
+                            {{-- Tombol Logout --}}
+                            <a class="dropdown-item text-danger" href="javascript:void(0);"
+                                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                <iconify-icon icon="solar:logout-3-broken" class="align-middle me-2 fs-18"></iconify-icon>
+                                <span class="align-middle">Logout</span>
+                            </a>
+
+                            {{-- Form Hidden untuk Logout --}}
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                @csrf
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
