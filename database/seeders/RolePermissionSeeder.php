@@ -15,26 +15,91 @@ class RolePermissionSeeder extends Seeder
 
         // 1. Buat daftar Permission
         $permissions = [
-            'view attendances',
-            'manage attendances',
-            'manage employees',
-            'view own attendance',
-            'clock in out',
-            'manage settings'
+            // Dashboard
+            'dashboard:admin',
+            'dashboard:pegawai',
+
+            // Data Master
+            'master:perusahaan',
+            'master:lokasi',
+            'master:departemen',
+            'master:jabatan',
+
+            // Kepegawaian
+            'pegawai:index',
+            'pegawai:create',
+            'pegawai:edit',
+            'pegawai:delete',
+            'pegawai:wajah', // Pendaftaran Wajah
+            'pegawai:resign',
+
+            // Absensi
+            'absensi:log',
+            'absensi:lembur',
+            'absensi:shift',
+            'absensi:hari-libur',
+
+            // Cuti & Izin
+            'cuti:pengajuan',
+            'cuti:approval',
+            'cuti:saldo',
+            'cuti:tipe',
+
+            // Payroll
+            'payroll:proses',
+            'payroll:komponen',
+            'payroll:slip',
+
+            // Lain-lain
+            'pengumuman:manage',
+
+            // Sistem
+            'setting:absensi',
+            'setting:user',
+            'setting:role-permission',
         ];
 
         foreach ($permissions as $permission) {
-            Permission::firstOrCreate(['name' => $permission]);
+            Permission::create(['name' => $permission]);
         }
 
-        // 2. Buat Role dan Assign Permissions
-        $employeeRole = Role::firstOrCreate(['name' => 'employee']);
-        $employeeRole->syncPermissions(['view own attendance', 'clock in out']);
+        // --- 2. DEFINE ROLES & ASSIGN PERMISSIONS ---
 
-        $hrRole = Role::firstOrCreate(['name' => 'hr']);
-        $hrRole->syncPermissions(['view attendances', 'manage attendances', 'manage employees']);
+        // ADMIN HR (Akses hampir semua menu operasional)
+        $hrRole = Role::create(['name' => 'hr']);
+        $hrRole->givePermissionTo([
+            'dashboard:admin',
+            'master:lokasi',
+            'master:departemen',
+            'master:jabatan',
+            'pegawai:index',
+            'pegawai:create',
+            'pegawai:edit',
+            'pegawai:wajah',
+            'pegawai:resign',
+            'absensi:log',
+            'absensi:lembur',
+            'absensi:shift',
+            'absensi:hari-libur',
+            'cuti:pengajuan',
+            'cuti:approval',
+            'cuti:saldo',
+            'payroll:proses',
+            'payroll:slip',
+            'pengumuman:manage'
+        ]);
 
-        $adminRole = Role::firstOrCreate(['name' => 'admin']);
-        $adminRole->syncPermissions(Permission::all()); // Admin dapat semua akses
+        // EMPLOYEE (Hanya akses menu mandiri)
+        $employeeRole = Role::create(['name' => 'employee']);
+        $employeeRole->givePermissionTo([
+            'dashboard:pegawai',
+            'absensi:log',
+            'cuti:pengajuan',
+            'payroll:slip'
+        ]);
+
+        // SUPER ADMIN (Segalanya)
+        $adminRole = Role::create(['name' => 'admin']);
+        $adminRole->givePermissionTo(Permission::all());
     }
 }
