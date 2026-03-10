@@ -2,23 +2,6 @@
 
 @section('css')
 <link href="https://cdn.jsdelivr.net/npm/gridjs/dist/theme/mermaid.min.css" rel="stylesheet" />
-<style>
-    .gridjs-wrapper {
-        box-shadow: none;
-        border-radius: 0;
-        border-top: 0;
-    }
-
-    .gridjs-search {
-        display: none;
-    }
-
-    th.gridjs-th {
-        background-color: var(--bs-light-subtle);
-        color: var(--bs-body-color);
-        font-weight: 600;
-    }
-</style>
 @endsection
 
 @section('content')
@@ -140,9 +123,7 @@
             `),
 
                 contact_html: '{{ $employee->phone ?? "-" }}',
-
                 location: '{{ $employee->officeLocation->name ?? "Belum Diatur" }}',
-
                 date: '{{ $employee->join_date ? $employee->join_date->format("d M Y") : "-" }}',
 
                 status_html: gridjs.html(

@@ -1,0 +1,79 @@
+/* public/css/custom-gridjs.css */
+
+/* Table Layout */
+.gridjs-wrapper {
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    border: none !important;
+}
+
+/* Header Styling */
+.gridjs-thead th {
+    background-color: rgba(243, 246, 249, 0.8) !important;
+    color: #6d7f8f !important;
+    font-weight: 600 !important;
+    text-transform: uppercase !important;
+    font-size: 11px !important;
+    padding: 12px 20px !important;
+    border-bottom: 1px solid #f1f1f1 !important;
+}
+
+/* Row & Cell Styling */
+.gridjs-tr {
+    border-bottom: 1px solid #f1f1f1 !important;
+    transition: all 0.2s;
+}
+.gridjs-tr:hover {
+    background-color: rgba(243, 246, 249, 0.5) !important;
+}
+.gridjs-td {
+    padding: 12px 20px !important;
+    color: #3e4954 !important;
+    font-size: 14px !important;
+}
+
+/* Footer & Pagination */
+.gridjs-footer {
+    box-shadow: none !important;
+    border-top: 1px solid #f1f1f1 !important;
+    padding: 10px !important;
+    background-color: transparent !important;
+}
+.gridjs-pagination .gridjs-pages button {
+    border-radius: 4px !important;
+    border: 1px solid #f1f1f1 !important;
+}
+.gridjs-pagination .gridjs-pages button.gridjs-currentPage {
+    background-color: #3073f1 !important;
+    color: white !important;
+}
+
+/* Search Input */
+.gridjs-search-input {
+    border-radius: 6px !important;
+    border: 1px solid #eef2f7 !important;
+    padding: 8px 12px !important;
+    font-size: 13px !important;
+}
+
+/* Modal Permission Card */
+.perm-card {
+    border: 1px solid #f1f1f1;
+    border-radius: 8px;
+    transition: all 0.2s;
+    background: #fff;
+}
+.perm-card:hover {
+    border-color: #3073f1;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+.perm-header {
+    background-color: #f8f9fa;
+    padding: 8px 12px;
+    font-weight: 600;
+    font-size: 11px;
+    text-transform: uppercase;
+    color: #3073f1;
+    border-bottom: 1px solid #f1f1f1;
+    border-radius: 8px 8px 0 0;
+}

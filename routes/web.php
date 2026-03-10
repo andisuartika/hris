@@ -6,6 +6,7 @@ use App\Http\Controllers\Web\CompanyController;
 use App\Http\Controllers\Web\DepartementController;
 use App\Http\Controllers\Web\EmployeeController;
 use App\Http\Controllers\Web\OfficeLocationController;
+use App\Http\Controllers\Web\RoleController;
 use App\Http\Controllers\Web\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -42,5 +43,6 @@ Route::middleware('auth')->group(function () {
         Route::resource('positions', PositionController::class);
         Route::resource('office-locations', OfficeLocationController::class);
         Route::resource('users', UserController::class);
+        Route::resource('roles', RoleController::class);
     });
 });

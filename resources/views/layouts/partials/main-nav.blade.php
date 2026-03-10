@@ -198,7 +198,7 @@
                         <li class="sub-nav-item"><a class="sub-nav-link" href="{{ route('users.index') }}">Pengguna (Users)</a></li>
                         @endcan
                         @can('setting:role-permission')
-                        <li class="sub-nav-item"><a class="sub-nav-link" href="#">Peran & Hak Akses</a></li>
+                        <li class="sub-nav-item"><a class="sub-nav-link" href="{{ route('roles.index') }}">Peran & Hak Akses</a></li>
                         @endcan
                     </ul>
                 </div>
