@@ -37,7 +37,7 @@ class EmployeeController extends Controller
         $departments = Department::where('company_id', $companyId)->get();
         $positions = Position::where('company_id', $companyId)->get();
 
-        return view('employees.index', compact('employees', 'officeLocations', 'departments', 'positions'));
+        return view('pages.employees.index', compact('employees', 'officeLocations', 'departments', 'positions'));
     }
 
 
@@ -55,7 +55,7 @@ class EmployeeController extends Controller
         $departments = Department::where('company_id', $companyId)->get();
         $positions = Position::where('company_id', $companyId)->get();
 
-        return view('employees.form', compact('officeLocations', 'departments', 'positions'));
+        return view('pages.employees.form', compact('officeLocations', 'departments', 'positions'));
     }
 
     public function store(StoreEmployeeRequest $request)
@@ -82,7 +82,7 @@ class EmployeeController extends Controller
         );
         $this->employeeService->createEmployee($dto);
 
-        return redirect()->route('employees.index')->with('success', 'Data pegawai berhasil ditambahkan.');
+        return redirect()->route('pages.employees.index')->with('success', 'Data pegawai berhasil ditambahkan.');
     }
 
     public function edit($id)
@@ -94,7 +94,7 @@ class EmployeeController extends Controller
         $departments = Department::where('company_id', $companyId)->get();
         $positions = Position::where('company_id', $companyId)->get();
 
-        return view('employees.form', compact('employee', 'officeLocations', 'departments', 'positions'));
+        return view('pages.employees.form', compact('employee', 'officeLocations', 'departments', 'positions'));
     }
 
     public function update(Request $request, $id)
@@ -132,13 +132,13 @@ class EmployeeController extends Controller
 
         $this->employeeService->updateEmployee($id, $dto);
 
-        return redirect()->route('employees.index')->with('success', 'Data pegawai berhasil diperbarui.');
+        return redirect()->route('pages.employees.index')->with('success', 'Data pegawai berhasil diperbarui.');
     }
 
     public function destroy($id)
     {
         $this->employeeService->deleteEmployee($id);
 
-        return redirect()->route('employees.index')->with('success', 'Data pegawai berhasil dihapus.');
+        return redirect()->route('pages.employees.index')->with('success', 'Data pegawai berhasil dihapus.');
     }
 }

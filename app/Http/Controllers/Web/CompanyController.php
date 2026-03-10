@@ -21,7 +21,7 @@ class CompanyController extends Controller
     public function index()
     {
         $companies = $this->companyService->getAll();
-        return view('master.companies.index', compact('companies'));
+        return view('pages.master.companies.index', compact('companies'));
     }
 
     /**
@@ -30,7 +30,7 @@ class CompanyController extends Controller
     public function create()
     {
         $timezones = \DateTimeZone::listIdentifiers();
-        return view('master.companies.form', compact('timezones'));
+        return view('pages.master.companies.form', compact('timezones'));
     }
 
     /**
@@ -54,7 +54,7 @@ class CompanyController extends Controller
     public function edit(Company $company)
     {
         $timezones = \DateTimeZone::listIdentifiers();
-        return view('master.companies.form', compact('company', 'timezones'));
+        return view('pages.master.companies.form', compact('company', 'timezones'));
     }
 
     /**

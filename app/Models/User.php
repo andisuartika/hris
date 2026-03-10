@@ -46,4 +46,24 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function employee()
+    {
+        return $this->hasOne(Employee::class);
+    }
+
+    public function officeLocation()
+    {
+        return $this->hasOneThrough(OfficeLocation::class, Employee::class, 'user_id', 'id', 'id', 'office_location_id');
+    }
+
+    public function department()
+    {
+        return $this->hasOneThrough(Department::class, Employee::class, 'user_id', 'id', 'id', 'department_id');
+    }
+
+    public function position()
+    {
+        return $this->hasOneThrough(Position::class, Employee::class, 'user_id', 'id', 'id', 'position_id');
+    }
 }

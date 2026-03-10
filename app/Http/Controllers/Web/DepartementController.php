@@ -19,7 +19,7 @@ class DepartementController extends Controller
     {
         $departments = $this->service->getAll();
         $companies = $this->companyService->getAll();
-        return view('master.departments.index', compact('departments', 'companies'));
+        return view('pages.master.departments.index', compact('departments', 'companies'));
     }
 
 

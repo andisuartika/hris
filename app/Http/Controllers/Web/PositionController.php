@@ -22,7 +22,7 @@ class PositionController extends Controller
         $positions = $this->service->getAll();
         $companies = $this->companyService->getAll();
 
-        return view('master.positions.index', compact('positions', 'companies'));
+        return view('pages.master.positions.index', compact('positions', 'companies'));
     }
 
     public function store(StorePositionRequest $request)

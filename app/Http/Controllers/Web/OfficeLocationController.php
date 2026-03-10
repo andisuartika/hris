@@ -19,7 +19,7 @@ class OfficeLocationController extends Controller
     {
         $locations = $this->service->getAll();
         $companies = $this->companyService->getAll();
-        return view('master.office-locations.index', compact('locations', 'companies'));
+        return view('pages.master.office-locations.index', compact('locations', 'companies'));
     }
 
     public function show($id)
@@ -33,7 +33,7 @@ class OfficeLocationController extends Controller
     public function create()
     {
         $companies = $this->companyService->getAll();
-        return view('master.office-locations.form', compact('companies'));
+        return view('pages.master.office-locations.form', compact('companies'));
     }
 
 
@@ -41,7 +41,7 @@ class OfficeLocationController extends Controller
     {
         $location = $this->service->getById($id);
         $companies = $this->companyService->getAll();
-        return view('master.office-locations.form', compact('location', 'companies'));
+        return view('pages.master.office-locations.form', compact('location', 'companies'));
     }
 
     public function store(OfficeLocationRequest $request)

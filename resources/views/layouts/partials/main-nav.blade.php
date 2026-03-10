@@ -195,7 +195,7 @@
                         <li class="sub-nav-item"><a class="sub-nav-link" href="#">Setting Absensi (Face/GPS)</a></li>
                         @endcan
                         @can('setting:user')
-                        <li class="sub-nav-item"><a class="sub-nav-link" href="#">Pengguna (Users)</a></li>
+                        <li class="sub-nav-item"><a class="sub-nav-link" href="{{ route('users.index') }}">Pengguna (Users)</a></li>
                         @endcan
                         @can('setting:role-permission')
                         <li class="sub-nav-item"><a class="sub-nav-link" href="#">Peran & Hak Akses</a></li>
