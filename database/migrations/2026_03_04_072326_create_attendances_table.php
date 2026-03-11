@@ -14,13 +14,29 @@ return new class extends Migration
         Schema::create('attendances', function (Blueprint $table) {
             $table->id();
             $table->foreignId('employee_id')->constrained()->cascadeOnDelete();
+
             $table->date('work_date');
-            $table->dateTime('clock_in_at')->nullable();
-            $table->dateTime('clock_out_at')->nullable();
-            $table->enum('status', ['present', 'late', 'absent'])->default('present');
+
+            $table->timestamp('clock_in_at')->nullable();
+            $table->timestamp('clock_out_at')->nullable();
+
+            $table->decimal('clock_in_lat', 10, 7)->nullable();
+            $table->decimal('clock_in_lng', 10, 7)->nullable();
+
+            $table->decimal('clock_out_lat', 10, 7)->nullable();
+            $table->decimal('clock_out_lng', 10, 7)->nullable();
+
+            $table->boolean('face_verified')->default(false);
+
+            $table->enum('status', [
+                'present',
+                'late',
+                'early_leave',
+                'absent'
+            ])->default('present');
+
             $table->timestamps();
 
-            // Mencegah karyawan absen 2 rekap di hari yang sama
             $table->unique(['employee_id', 'work_date']);
         });
     }
