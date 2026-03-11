@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\ApiAttendanceController;
 use App\Http\Controllers\Api\ApiAuthController;
 use Illuminate\Support\Facades\Route;
 
@@ -16,10 +17,10 @@ Route::prefix('v1')->group(function () {
 
     Route::middleware('auth:sanctum')->prefix('attendance')->group(function () {
 
-        // Route::post('/checkin', [AttendanceController::class, 'checkin']);
-        // Route::post('/checkout', [AttendanceController::class, 'checkout']);
-        // Route::get('/today', [AttendanceController::class, 'today']);
-        // Route::get('/history', [AttendanceController::class, 'history']);
+        Route::post('/checkin', [ApiAttendanceController::class, 'checkin']);
+        Route::post('/checkout', [ApiAttendanceController::class, 'checkout']);
+        Route::get('/today', [ApiAttendanceController::class, 'today']);
+        Route::get('/history', [ApiAttendanceController::class, 'history']);
     });
 
     Route::get('/test', function () {
