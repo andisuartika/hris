@@ -3,9 +3,10 @@
 namespace App\Services\Auth;
 
 use App\DTO\Auth\LoginDTO;
+use App\Models\User;
 use App\Repositories\Auth\UserRepository;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\ValidationException;
 
@@ -15,7 +16,7 @@ class AuthService
         protected UserRepository $userRepository
     ) {}
 
-    // --- UNTUK API ---
+    // --- API LOGIN ---
     public function login(LoginDTO $dto): array
     {
         $user = $this->userRepository->findByEmail($dto->email);
@@ -26,8 +27,9 @@ class AuthService
             ]);
         }
 
-        // Generate token untuk API
         $token = $this->userRepository->createToken($user, $dto->deviceName);
+
+        $user = $this->getProfile($user);
 
         return [
             'user' => $user,
@@ -35,12 +37,21 @@ class AuthService
         ];
     }
 
-    public function logout($user): void
+    public function logout(User $user): void
     {
         $this->userRepository->revokeCurrentToken($user);
     }
 
-    // --- UNTUK WEB ---
+    public function getProfile(User $user): User
+    {
+        return $user->load([
+            'employee.department',
+            'employee.position',
+            'employee.officeLocation'
+        ]);
+    }
+
+    // --- WEB LOGIN ---
     public function webLogin(LoginDTO $dto, bool $remember = false): void
     {
         $user = $this->userRepository->findByEmail($dto->email);
@@ -51,7 +62,6 @@ class AuthService
             ]);
         }
 
-        // Buat session login bawaan Laravel
         Auth::login($user, $remember);
     }
 

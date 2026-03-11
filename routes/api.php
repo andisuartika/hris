@@ -1,20 +1,30 @@
 <?php
 
-use App\Http\Controllers\Api\Auth\AuthController;
-use Illuminate\Routing\Route;
+use App\Http\Controllers\Api\ApiAuthController;
+use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->group(function () {
 
-    Route::post('/login', [AuthController::class, 'login']);
+    Route::prefix('auth')->group(function () {
 
-    Route::middleware('auth:sanctum')->group(function () {
+        Route::post('/login', [ApiAuthController::class, 'login']);
+        Route::middleware('auth:sanctum')->group(function () {
+            Route::post('/logout', [ApiAuthController::class, 'logout']);
+            Route::get('/profile', [ApiAuthController::class, 'profile']);
+        });
+    });
 
-        Route::post('/logout', [AuthController::class, 'logout']);
+    Route::middleware('auth:sanctum')->prefix('attendance')->group(function () {
 
-        // Route::prefix('attendance')->group(function () {
-        //     Route::post('/check-in', [AttendanceController::class, 'checkIn']);
-        //     Route::post('/check-out', [AttendanceController::class, 'checkOut']);
-        //     Route::get('/today', [AttendanceController::class, 'today']);
-        // });
+        // Route::post('/checkin', [AttendanceController::class, 'checkin']);
+        // Route::post('/checkout', [AttendanceController::class, 'checkout']);
+        // Route::get('/today', [AttendanceController::class, 'today']);
+        // Route::get('/history', [AttendanceController::class, 'history']);
+    });
+
+    Route::get('/test', function () {
+        return response()->json([
+            'message' => 'API v1 is working!'
+        ]);
     });
 });

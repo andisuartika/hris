@@ -1,17 +1,18 @@
 <?php
 
-namespace App\Http\Controllers\Api\Auth;
+namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Services\Auth\AuthService;
 use App\DTO\Auth\LoginDTO;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Http\Resources\ProfileResource;
 use App\Traits\ApiResponse;
 use Illuminate\Http\Request;
 
-class AuthController extends Controller
+class ApiAuthController extends Controller
 {
-    use ApiResponse; // <-- pakai trait formatter
+    use ApiResponse;
 
     public function __construct(
         protected AuthService $authService
@@ -51,6 +52,17 @@ class AuthController extends Controller
         }
     }
 
+    /**
+     * Get Profile
+     */
+    public function profile()
+    {
+        $user = $this->authService->getProfile(auth()->user());
+        return $this->success(
+            new ProfileResource($user),
+            'User profile'
+        );
+    }
     /**
      * Logout
      */

@@ -82,7 +82,7 @@ class EmployeeController extends Controller
         );
         $this->employeeService->createEmployee($dto);
 
-        return redirect()->route('pages.employees.index')->with('success', 'Data pegawai berhasil ditambahkan.');
+        return redirect()->route('employees.index')->with('success', 'Data pegawai berhasil ditambahkan.');
     }
 
     public function edit($id)
@@ -132,13 +132,13 @@ class EmployeeController extends Controller
 
         $this->employeeService->updateEmployee($id, $dto);
 
-        return redirect()->route('pages.employees.index')->with('success', 'Data pegawai berhasil diperbarui.');
+        return redirect()->route('employees.index')->with('success', 'Data pegawai berhasil diperbarui.');
     }
 
     public function destroy($id)
     {
         $this->employeeService->deleteEmployee($id);
 
-        return redirect()->route('pages.employees.index')->with('success', 'Data pegawai berhasil dihapus.');
+        return redirect()->route('employees.index')->with('success', 'Data pegawai berhasil dihapus.');
     }
 }
