@@ -9,28 +9,28 @@ trait ApiResponse
 {
     /**
      * Standard Success Response
-     *
-     * @param mixed $data
-     * @param string $message
-     * @param int $status
-     * @param array|null $meta
-     * @return JsonResponse
      */
     public function success(
         mixed $data = null,
         string $message = 'Success',
         int $status = 200,
-        ?array $meta = null
+        ?array $meta = null,
+        ?string $code = null
     ): JsonResponse {
+
         $response = [
             'success' => true,
             'message' => $message,
-            'data' => $data,
-            'errors' => []
+            'data' => $data ?? [],
+            'errors' => [],
         ];
 
         if ($meta) {
             $response['meta'] = $meta;
+        }
+
+        if ($code) {
+            $response['code'] = $code;
         }
 
         return response()->json($response, $status);
@@ -38,52 +38,55 @@ trait ApiResponse
 
     /**
      * Standard Error Response
-     *
-     * @param string|array|null $errors
-     * @param string $message
-     * @param int $status
-     * @return JsonResponse
      */
     public function error(
         string|array|null $errors = null,
         string $message = 'Error',
-        int $status = 400
+        int $status = 400,
+        ?string $code = null
     ): JsonResponse {
-        return response()->json([
+
+        $response = [
             'success' => false,
             'message' => $message,
             'data' => null,
-            'errors' => $errors ?? [],
-        ], $status);
+            'errors' => $errors ? (array) $errors : [],
+        ];
+
+        if ($code) {
+            $response['code'] = $code;
+        }
+
+        return response()->json($response, $status);
     }
 
     /**
      * Validation Error Response
-     *
-     * @param array $errors
-     * @param string $message
-     * @param int $status
-     * @return JsonResponse
      */
-    public function validationError(array $errors, string $message = 'Validation Error', int $status = 422): JsonResponse
-    {
+    public function validationError(
+        array $errors,
+        string $message = 'Validation Error',
+        int $status = 422,
+        ?string $code = 'VALIDATION_ERROR'
+    ): JsonResponse {
+
         return response()->json([
             'success' => false,
             'message' => $message,
             'data' => null,
-            'errors' => $errors
+            'errors' => $errors,
+            'code' => $code
         ], $status);
     }
 
     /**
      * Paginated Response
-     *
-     * @param LengthAwarePaginator $paginator
-     * @param string $message
-     * @return JsonResponse
      */
-    public function paginated(LengthAwarePaginator $paginator, string $message = 'Success'): JsonResponse
-    {
+    public function paginated(
+        LengthAwarePaginator $paginator,
+        string $message = 'Success'
+    ): JsonResponse {
+
         return $this->success(
             data: $paginator->items(),
             message: $message,
@@ -91,7 +94,8 @@ trait ApiResponse
                 'current_page' => $paginator->currentPage(),
                 'per_page' => $paginator->perPage(),
                 'total' => $paginator->total(),
-                'last_page' => $paginator->lastPage()
+                'last_page' => $paginator->lastPage(),
+                'has_more' => $paginator->hasMorePages(),
             ]
         );
     }
