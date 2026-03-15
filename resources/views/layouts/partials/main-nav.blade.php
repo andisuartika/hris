@@ -112,7 +112,7 @@
                         <li class="sub-nav-item"><a class="sub-nav-link" href="#">Pengajuan Lembur</a></li>
                         @endcan
                         @can('absensi:shift')
-                        <li class="sub-nav-item"><a class="sub-nav-link" href="#">Jadwal Kerja (Shift)</a></li>
+                        <li class="sub-nav-item"><a class="sub-nav-link" href="{{ route('work-schedules.index') }}">Jadwal Kerja (Shift)</a></li>
                         @endcan
                         @can('absensi:hari-libur')
                         <li class="sub-nav-item"><a class="sub-nav-link" href="#">Hari Libur Nasional</a></li>
