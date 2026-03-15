@@ -9,6 +9,13 @@ class Holiday extends Model
     protected $fillable = [
         'name',
         'holiday_date',
-        'description'
+        'type',
+        'description',
+        'is_generated'
+    ];
+
+    protected $casts = [
+        'holiday_date' => 'date',
+        'is_generated' => 'boolean'
     ];
 }
