@@ -60,44 +60,29 @@
 
 {{-- MODAL --}}
 <div class="modal fade" id="modalSchedule" data-bs-backdrop="static">
-
     <div class="modal-dialog modal-xl">
-
         <div class="modal-content border-0">
-
             <form id="scheduleForm" method="POST">
-
                 @csrf
                 <div id="methodField"></div>
-
                 <div class="modal-header bg-light">
                     <h5 class="modal-title" id="modalTitle">Work Schedule</h5>
-                    <button class="btn-close" data-bs-dismiss="modal"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
-
                 <div class="modal-body">
-
                     <div class="row mb-4">
-
                         <div class="col-md-6">
                             <label class="form-label">Schedule Name</label>
                             <input type="text" name="name" id="name" class="form-control" required>
                         </div>
-
                         <div class="col-md-6">
                             <label class="form-label">Code</label>
                             <input type="text" name="code" id="code" class="form-control" required>
                         </div>
-
                     </div>
-
-
                     <h6 class="fw-bold mb-3">Daily Schedule</h6>
-
                     <div class="table-responsive">
-
                         <table class="table table-bordered align-middle">
-
                             <thead class="table-light">
                                 <tr>
                                     <th width="120">Day</th>
@@ -110,7 +95,6 @@
                                     <th>Tolerance Late</th>
                                 </tr>
                             </thead>
-
                             <tbody>
 
                                 @php
@@ -128,12 +112,9 @@
                                 @foreach($days as $num=>$day)
 
                                 <tr>
-
                                     <td class="fw-semibold">{{ $day }}</td>
-
                                     <td>
                                         <input type="hidden" name="days[{{ $num }}][is_working_day]" value="0">
-
                                         <input type="checkbox"
                                             name="days[{{ $num }}][is_working_day]"
                                             value="1">
@@ -189,8 +170,12 @@
                 </div>
 
                 <div class="modal-footer bg-light">
-                    <button class="btn btn-light" data-bs-dismiss="modal">Tutup</button>
-                    <button class="btn btn-primary px-4">Simpan</button>
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">
+                        Tutup
+                    </button>
+                    <button type="submit" class="btn btn-primary px-4">
+                        Simpan
+                    </button>
                 </div>
 
             </form>
@@ -210,6 +195,7 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
 
+
         const modal = new bootstrap.Modal(document.getElementById('modalSchedule'));
 
         const schedules = @json($schedules);
@@ -218,24 +204,28 @@
             name: schedule.name,
             code: schedule.code,
             aksi: gridjs.html(`
-            <button onclick='editSchedule(${schedule.id})'
-            class="btn btn-soft-primary btn-sm">
-            Edit
-            </button>
+                <button onclick='editSchedule(${schedule.id})'
+                    class="btn btn-soft-primary btn-sm">
+                    Edit
+                </button>
 
-            <form action="/work-schedules/${schedule.id}"
-            method="POST"
-            class="d-inline">
+                <form action="/work-schedules/${schedule.id}"
+                    method="POST"
+                    class="d-inline form-delete">
 
-            <input type="hidden" name="_token" value="{{ csrf_token() }}">
-            <input type="hidden" name="_method" value="DELETE">
+                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                    <input type="hidden" name="_method" value="DELETE">
 
-            <button class="btn btn-soft-danger btn-sm">
-            Delete
-            </button>
+                    <button type="button"
+                        class="btn btn-soft-danger btn-sm swal-confirm"
+                        data-title="Hapus Jadwal Kerja?"
+                        data-text="Data ${schedule.name} akan dihapus"
+                        data-confirm="Ya, Hapus">
+                        Delete
+                    </button>
 
-            </form>
-        `)
+                </form>
+            `)
         }));
 
 

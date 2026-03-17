@@ -84,7 +84,7 @@
 
                 <div class="modal-header bg-light">
                     <h5 class="modal-title" id="modalTitle">Holiday</h5>
-                    <button class="btn-close" data-bs-dismiss="modal"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
 
                 <div class="modal-body">
@@ -121,7 +121,7 @@
                 </div>
 
                 <div class="modal-footer bg-light">
-                    <button class="btn btn-light" data-bs-dismiss="modal">Tutup</button>
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Tutup</button>
                     <button class="btn btn-primary px-4">Simpan</button>
                 </div>
 
@@ -152,12 +152,13 @@
 
                     <label class="form-label">Tahun</label>
 
-                    <input
-                        type="number"
-                        id="year"
-                        class="form-control"
-                        value="{{ date('Y') }}"
-                        required>
+                    <select id="year" class="form-control" required>
+                        @for($i = date('Y') - 5; $i <= date('Y') + 5; $i++)
+                            <option value="{{ $i }}" {{ $i == date('Y') ? 'selected' : '' }}>
+                            {{ $i }}
+                            </option>
+                            @endfor
+                    </select>
 
                 </div>
 
