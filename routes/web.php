@@ -4,6 +4,7 @@ use App\Http\Controllers\Web\AuthController;
 use App\Http\Controllers\Web\CompanyController;
 use App\Http\Controllers\Web\DepartementController;
 use App\Http\Controllers\Web\EmployeeController;
+use App\Http\Controllers\Web\HolidayController;
 use App\Http\Controllers\Web\OfficeLocationController;
 use App\Http\Controllers\Web\PositionController;
 use App\Http\Controllers\Web\RoleController;
@@ -46,5 +47,7 @@ Route::middleware('auth')->group(function () {
         Route::resource('users', UserController::class);
         Route::resource('roles', RoleController::class);
         Route::resource('work-schedules', WorkScheduleController::class);
+        Route::resource('holidays', HolidayController::class);
+        Route::post('/holidays/generate/{year}', [HolidayController::class, 'generate']);
     });
 });

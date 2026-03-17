@@ -115,7 +115,7 @@
                         <li class="sub-nav-item"><a class="sub-nav-link" href="{{ route('work-schedules.index') }}">Jadwal Kerja (Shift)</a></li>
                         @endcan
                         @can('absensi:hari-libur')
-                        <li class="sub-nav-item"><a class="sub-nav-link" href="#">Hari Libur Nasional</a></li>
+                        <li class="sub-nav-item"><a class="sub-nav-link" href="{{ route('holidays.index') }}">Hari Libur Nasional</a></li>
                         @endcan
                     </ul>
                 </div>
