@@ -3,61 +3,121 @@
 namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
+use App\Models\Employee;
 use App\Models\User;
-use App\Services\Employee\UserService;
-use Illuminate\Support\Facades\Request;
-use Spatie\Permission\Models\Role;
+use App\Services\Sso\KeycloakAdminService;
+use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
     public function __construct(
-        protected UserService $userService
+        protected KeycloakAdminService $keycloak
     ) {}
 
     public function index()
     {
-        $users = $this->userService->getAllUsers();
-        $roles = Role::all();
-        return view('pages.users.index', compact('users', 'roles'));
+        $ssoUsers = collect($this->keycloak->listUsers())
+            ->reject(fn ($u) => str_starts_with($u['username'], 'service-account-'));
+        $roleMap = $this->keycloak->roleMap();
+
+        $localUsers = User::with('employee')
+            ->whereIn('keycloak_id', $ssoUsers->pluck('id'))
+            ->orWhereIn('email', $ssoUsers->pluck('email')->filter())
+            ->get();
+
+        $employeesByCode = Employee::with('user')->get()->keyBy('employee_code');
+
+        $users = $ssoUsers->map(function ($u) use ($roleMap, $localUsers, $employeesByCode) {
+            $nip = $u['attributes']['nip'][0] ?? null;
+
+            $local = $localUsers->first(fn ($l) => $l->keycloak_id === $u['id'])
+                ?? $localUsers->first(fn ($l) => $l->email === ($u['email'] ?? null));
+
+            $employee = $local?->employee ?? ($nip ? $employeesByCode->get($nip) : null);
+
+            return (object) [
+                'id'       => $u['id'],
+                'username' => $u['username'],
+                'name'     => trim(($u['firstName'] ?? '').' '.($u['lastName'] ?? '')) ?: $u['username'],
+                'email'    => $u['email'] ?? null,
+                'enabled'  => $u['enabled'] ?? true,
+                'nip'      => $nip,
+                'roles'    => $roleMap[$u['id']] ?? [],
+                'employee' => $employee,
+            ];
+        })->values();
+
+        $employees = Employee::orderBy('full_name')->get(['id', 'employee_code', 'full_name']);
+        $roles = ['admin', 'manager', 'pegawai'];
+
+        return view('pages.users.index', compact('users', 'roles', 'employees'));
     }
 
-    public function show($id)
+    public function store(Request $request)
     {
-        $user = $this->userService->getUserById($id);
-        return view('pages.users.detail', compact('user'));
-    }
-
-    public function store()
-    {
-        // Implementasi penyimpanan user baru
-        $data = request()->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'phone' => 'nullable|string|max:20',
-            'password' => 'required|string|min:6|confirmed',
-            'status' => 'required',
+        $data = $request->validate([
+            'name'        => 'required|string|max:255',
+            'username'    => 'required|string|max:100',
+            'email'       => 'required|email|max:255',
+            'role'        => ['required', Rule::in(['admin', 'manager', 'pegawai'])],
+            'employee_id' => 'nullable|exists:employees,id',
+            'password'    => 'required|string|min:6|confirmed',
         ]);
 
-        $this->userService->createUser($data);
-        return redirect()->route('users.index')->with('success', 'User berhasil ditambahkan.');
-    }
+        [$firstName, $lastName] = array_pad(explode(' ', $data['name'], 2), 2, '');
+        $employee = ! empty($data['employee_id']) ? Employee::find($data['employee_id']) : null;
 
-    public function update(User $user)
-    {
-        $data = request()->validate([
-            'name'     => 'required|string',
-            'email'    => 'required|email|unique:users,email,' . $user->id,
-            'role'     => 'required',
-            'password' => 'nullable|min:6|confirmed',
+        $keycloakId = $this->keycloak->createUser([
+            'username'      => $data['username'],
+            'email'         => $data['email'],
+            'firstName'     => $firstName,
+            'lastName'      => $lastName,
+            'enabled'       => true,
+            'emailVerified' => true,
+            'attributes'    => $employee ? ['nip' => [$employee->employee_code]] : [],
+            'credentials'   => [[
+                'type'      => 'password',
+                'value'     => $data['password'],
+                'temporary' => true,
+            ]],
         ]);
 
-        if (request()->filled('password')) {
-            $this->userService->updatePassword($user->id, $data['password']);
-        }
+        $this->keycloak->syncRealmRoles($keycloakId, [$data['role']]);
 
-        $this->userService->updateUserProfile($user->id, $data);
-        $user->syncRoles($data['role']);
+        return redirect()->route('users.index')
+            ->with('success', 'Pengguna berhasil dibuat di SSO. Password bersifat sementara dan wajib diganti saat login pertama.');
+    }
 
-        return back()->with('success', 'User updated successfully');
+    public function update(Request $request, string $id)
+    {
+        $data = $request->validate([
+            'name'        => 'required|string|max:255',
+            'email'       => 'required|email|max:255',
+            'role'        => ['required', Rule::in(['admin', 'manager', 'pegawai'])],
+            'employee_id' => 'nullable|exists:employees,id',
+            'enabled'     => 'required|in:1,0',
+        ]);
+
+        [$firstName, $lastName] = array_pad(explode(' ', $data['name'], 2), 2, '');
+        $employee = ! empty($data['employee_id']) ? Employee::find($data['employee_id']) : null;
+
+        $this->keycloak->updateUser($id, [
+            'email'      => $data['email'],
+            'firstName'  => $firstName,
+            'lastName'   => $lastName,
+            'enabled'    => $data['enabled'] === '1',
+            'attributes' => $employee ? ['nip' => [$employee->employee_code]] : [],
+        ]);
+
+        $this->keycloak->syncRealmRoles($id, [$data['role']]);
+
+        // Sinkronkan shadow user lokal jika sudah pernah login
+        User::where('keycloak_id', $id)->update([
+            'name'  => $data['name'],
+            'email' => $data['email'],
+        ]);
+
+        return back()->with('success', 'Pengguna SSO berhasil diperbarui.');
     }
 }

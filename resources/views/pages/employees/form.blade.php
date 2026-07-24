@@ -69,20 +69,28 @@
                                 value="{{ old('phone', $employee->phone ?? '') }}" placeholder="08xxxxxxxxxx">
                             @error('phone') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         </div>
+                        @empty($employee)
                         <div class="col-lg-6">
                             <label for="password" class="form-label">
-                                Kata Sandi
-                                @isset($employee) <span class="text-muted fw-normal fs-12">(Kosongkan jika tidak diubah)</span> @else <span class="text-danger">*</span> @endisset
+                                Kata Sandi Awal SSO <span class="text-danger">*</span>
                             </label>
                             <input type="password" id="password" name="password" class="form-control @error('password') is-invalid @enderror"
-                                placeholder="Minimal 6 karakter" {{ !isset($employee) ? 'required' : '' }}>
+                                placeholder="Minimal 6 karakter" required>
                             @error('password') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            <small class="text-muted">Akun dibuat di SSO. Password ini sementara — pegawai wajib menggantinya saat login pertama.</small>
                         </div>
                         <div class="col-lg-6">
                             <label for="password_confirmation" class="form-label">Konfirmasi Kata Sandi</label>
                             <input type="password" id="password_confirmation" name="password_confirmation" class="form-control"
-                                placeholder="Ketik ulang kata sandi" {{ !isset($employee) ? 'required' : '' }}>
+                                placeholder="Ketik ulang kata sandi" required>
                         </div>
+                        @else
+                        <div class="col-lg-12">
+                            <div class="alert alert-info mb-0 py-2 fs-13">
+                                <i class="ri-shield-keyhole-line me-1"></i> Akun & password pegawai dikelola melalui SSO. Ubah password lewat halaman SSO Keycloak.
+                            </div>
+                        </div>
+                        @endempty
                     </div>
                 </div>
             </div>

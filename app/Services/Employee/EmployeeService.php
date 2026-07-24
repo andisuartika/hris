@@ -7,9 +7,15 @@ use App\Models\Employee;
 use App\DTO\Employee\EmployeeDTO;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
+use App\Services\Sso\KeycloakAdminService;
 
 class EmployeeService
 {
+    public function __construct(
+        protected KeycloakAdminService $keycloak
+    ) {}
+
     public function getAllEmployees()
     {
         return Employee::with(['user', 'officeLocation', 'department', 'position'])->latest()->get();
@@ -60,17 +66,34 @@ class EmployeeService
 
     public function createEmployee(EmployeeDTO $dto): void
     {
-        // Gunakan DB Transaction agar jika gagal di tabel employee, data user ikut terhapus
-        DB::transaction(function () use ($dto) {
-            // 1. Buat Akun User untuk Login
+        // 1. Buat akun di Keycloak SSO (sumber kebenaran user).
+        //    Password dari form bersifat sementara — wajib diganti saat login pertama.
+        $keycloakId = $this->keycloak->createUser([
+            'username'      => strstr($dto->email, '@', true) ?: $dto->employeeCode,
+            'email'         => $dto->email,
+            'firstName'     => strtok($dto->fullName, ' '),
+            'lastName'      => trim(strstr($dto->fullName, ' ') ?: ''),
+            'enabled'       => true,
+            'emailVerified' => true,
+            'attributes'    => ['nip' => [$dto->employeeCode]],
+            'credentials'   => [[
+                'type'      => 'password',
+                'value'     => $dto->password,
+                'temporary' => true,
+            ]],
+        ]);
+        $this->keycloak->syncRealmRoles($keycloakId, ['pegawai']);
+
+        DB::transaction(function () use ($dto, $keycloakId) {
+            // 2. Buat shadow user lokal (login hanya via SSO, password acak tidak dipakai)
             $user = User::create([
                 'name' => $dto->fullName,
                 'email' => $dto->email,
                 'phone' => $dto->phone,
-                'password' => Hash::make($dto->password),
+                'password' => Hash::make(Str::random(40)),
+                'keycloak_id' => $keycloakId,
             ]);
 
-            // 2. Berikan Role default 'employee' (Spatie Permission)
             $user->assignRole('employee');
 
             $primaryLocationId = !empty($dto->officeLocations) ? $dto->officeLocations[0] : null;
@@ -102,18 +125,22 @@ class EmployeeService
             $employee = Employee::findOrFail($id);
             $user = $employee->user;
 
-            // 1. Update Data User Login
-            $userData = [
+            // 1. Update shadow user lokal (tanpa password — password dikelola SSO)
+            $user->update([
                 'name' => $dto->fullName,
                 'email' => $dto->email,
                 'phone' => $dto->phone,
-            ];
+            ]);
 
-            // Jika password diisi di form, maka update passwordnya
-            if (!empty($dto->password)) {
-                $userData['password'] = Hash::make($dto->password);
+            // Sinkronkan profil ke Keycloak jika sudah tertaut
+            if ($user->keycloak_id) {
+                $this->keycloak->updateUser($user->keycloak_id, [
+                    'email'      => $dto->email,
+                    'firstName'  => strtok($dto->fullName, ' '),
+                    'lastName'   => trim(strstr($dto->fullName, ' ') ?: ''),
+                    'attributes' => ['nip' => [$dto->employeeCode]],
+                ]);
             }
-            $user->update($userData);
 
             $primaryLocationId = !empty($dto->officeLocations) ? $dto->officeLocations[0] : null;
 
