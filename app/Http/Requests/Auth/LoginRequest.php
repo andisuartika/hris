@@ -14,7 +14,8 @@ class LoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => ['required', 'email'],
+            // Bisa berisi email atau username Keycloak
+            'email' => ['required', 'string'],
             'password' => ['required', 'string'],
             'device_name' => ['required', 'string']
         ];

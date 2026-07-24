@@ -6,6 +6,8 @@ services:
     container_name: hris_app
     restart: unless-stopped
     working_dir: /var/www
+    environment:
+      TZ: Asia/Makassar
     volumes:
       - .:/var/www
       - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
@@ -34,6 +36,7 @@ services:
     container_name: hris_mysql
     restart: unless-stopped
     environment:
+      TZ: Asia/Makassar
       MYSQL_DATABASE: hris
       MYSQL_ROOT_PASSWORD: secret
       MYSQL_PASSWORD: secret

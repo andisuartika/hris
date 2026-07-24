@@ -9,7 +9,13 @@ use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Resources\ProfileResource;
 use App\Traits\ApiResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
+/**
+ * @group Autentikasi
+ *
+ * Login SSO, profil, dan logout.
+ */
 class ApiAuthController extends Controller
 {
     use ApiResponse;
@@ -20,6 +26,9 @@ class ApiAuthController extends Controller
 
     /**
      * Login
+     *
+     * Login via SSO Keycloak. Field `email` dapat diisi email atau username SSO.
+     * @unauthenticated
      */
     public function login(LoginRequest $request)
     {
@@ -63,6 +72,62 @@ class ApiAuthController extends Controller
             'User profile'
         );
     }
+    /**
+     * Refresh Token
+     *
+     * Tukar token lama dengan token baru (token lama dicabut). Panggil sebelum token
+     * kedaluwarsa (30 hari) agar user tidak perlu login ulang.
+     */
+    public function refresh(Request $request)
+    {
+        $user = $request->user();
+        $deviceName = $user->currentAccessToken()->name;
+
+        $user->currentAccessToken()->delete();
+        $token = $user->createToken($deviceName)->plainTextToken;
+
+        return $this->success(['token' => $token], 'Token diperbarui');
+    }
+
+    /**
+     * Update Profile (phone, alamat, foto).
+     * Data identitas lain (nama, email, password) dikelola via SSO/admin.
+     */
+    public function updateProfile(Request $request)
+    {
+        $data = $request->validate([
+            'phone'   => 'nullable|string|max:20',
+            'address' => 'nullable|string|max:500',
+            'photo'   => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        ]);
+
+        $employee = $request->user()->employee;
+
+        if (! $employee) {
+            return $this->error(
+                errors: 'Akun tidak memiliki data pegawai.',
+                message: 'Data pegawai tidak ditemukan',
+                status: 404
+            );
+        }
+
+        if ($request->hasFile('photo')) {
+            if ($employee->photo) {
+                Storage::disk('public')->delete($employee->photo);
+            }
+            $data['photo'] = $request->file('photo')->store('employees/photos', 'public');
+        }
+
+        $employee->update(array_filter($data, fn ($v) => $v !== null));
+
+        $user = $this->authService->getProfile($request->user()->fresh());
+
+        return $this->success(
+            new ProfileResource($user),
+            'Profil berhasil diperbarui'
+        );
+    }
+
     /**
      * Logout
      */
