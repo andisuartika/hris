@@ -47,7 +47,8 @@ return [
     |
     */
 
-    'expiration' => null,
+    // Token API kedaluwarsa setelah 30 hari (menit). Mobile memperpanjang via POST /auth/refresh.
+    'expiration' => (int) env('SANCTUM_TOKEN_EXPIRATION', 43200),
 
     /*
     |--------------------------------------------------------------------------

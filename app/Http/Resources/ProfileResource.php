@@ -24,6 +24,7 @@ class ProfileResource extends JsonResource
                 'email' => $employee?->email,
                 'phone' => $employee?->phone,
                 'address' => $employee?->address,
+                'photo_url' => $employee?->photo ? \Illuminate\Support\Facades\Storage::disk('public')->url($employee->photo) : null,
                 'status' => $employee?->status,
                 'join_date' => $employee?->join_date,
 
