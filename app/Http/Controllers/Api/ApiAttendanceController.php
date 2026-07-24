@@ -81,3 +81,6 @@ class ApiAttendanceController extends Controller
         return $this->paginated($attendances);
     }
 }
+
+
+
